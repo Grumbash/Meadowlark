@@ -1,18 +1,10 @@
 const express = require('express');
 var app = express();
-
 const handlebars = require('express-handlebars').create({defaultLayout:'main'});
+const fortune = require('./lib/fortune.js');
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 
-var fortunes = [
-  "Win your fears or they will defeat you.",
-  "Rivers need sources.",
-  "Do not be afraid of the unknown.",
-  "You will have a pleasant surprise",
-  "Be easier wherever you can",
-  "A lot of letters, not a few letters"
-];
 app.set('port', process.env.PORT||3000);
 
 app.use(express.static(__dirname + '/public'));
@@ -21,8 +13,7 @@ app.get('/', function (req, res) {
   res.render('home');
 });
 app.get('/about', function (req, res) {
-  var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-  res.render('about', {fortune: randomFortune});
+  res.render('about', {fortune: getFortune()});
 });
 //Обобщенный обработчик 404(промежуточное ПО)
 app.use(function (req, res, next) {
